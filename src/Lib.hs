@@ -93,13 +93,21 @@ Desde unGimnasio puedo viajar a miDestino si miDestino se encuentra entre los si
 
 puedeViajar :: Destino -> Destino -> Bool
 
--- esto es un poquito imperativo
+-- esto es un poquito imperativo, y tiene un pequeño problema de lógica.
 puedeViajarV1 (UnaLiga _) _ = False
 puedeViajarV1 origen destino | origen == destino = True
                            | otherwise = puedeViajar (siguiente origen) destino
 
--- esto es más declarativo
-puedeViajar (UnaLiga _) _ = False
+-- esto es más declarativo, pero tiene un pequeño problema de lógica (siempre da falso)
+puedeViajarV2 (UnaLiga _) _ = False
+puedeViajarV2 origen destino =  origen == destino || puedeViajar (siguiente origen) destino
+
+-- soluciona el problema de lógica.
+puedeViajarV3 (UnaLiga contrincantes) destino = (UnaLiga contrincantes) == destino
+puedeViajarV3 origen destino =  origen == destino || puedeViajar (siguiente origen) destino
+
+-- soluciona el problema pero con un chiche que pueden googlear: "at pattern"
+puedeViajar liga@(UnaLiga _) destino = liga == destino
 puedeViajar origen destino =  origen == destino || puedeViajar (siguiente origen) destino
 
 -- Punto 6
@@ -116,10 +124,10 @@ elMejorDeDos pokemones poke1 poke2 | cantidadVictorias poke1 pokemones >= cantid
 miHead (x:xs) = x
 
 -- no acepta listas vacias (y está bien)
-foldl1 operacion (x:xs) = foldl operacion x xs
+-- foldl1 operacion (x:xs) = foldl operacion x xs
 
 -- no acepta listas vacías y está mal, porque sum debería
-sum' = foldl1 (+)
+sum' lista = foldl1 (+) lista
 
 -- Este sum es la q va
-sum'' = foldl (+) 0
+sum'' lista = foldl (+) 0 lista
