@@ -83,3 +83,43 @@ estaAlHornoV3 poke (UnaLiga contrincantes) = all (\contrincante -> leGana contri
 estaAlHornoV4 poke (UnaLiga contrs) = cantidadVictorias poke contrs == 0
 
 esPar = (\nro -> mod nro 2 == 0)
+
+-- punto 5
+{-Saber si puedo viajar de un destino al otro. 
+Consideraciones a tener en cuenta:
+Desde una Liga no puedo viajar a otro destino.
+Desde unGimnasio puedo viajar a miDestino si miDestino se encuentra entre los siguientes destinos de unGimnasio. Es decir, miDestino debe estar en el camino a seguir de unGimnasio.
+-}
+
+puedeViajar :: Destino -> Destino -> Bool
+
+-- esto es un poquito imperativo
+puedeViajarV1 (UnaLiga _) _ = False
+puedeViajarV1 origen destino | origen == destino = True
+                           | otherwise = puedeViajar (siguiente origen) destino
+
+-- esto es más declarativo
+puedeViajar (UnaLiga _) _ = False
+puedeViajar origen destino =  origen == destino || puedeViajar (siguiente origen) destino
+
+-- Punto 6
+-- Conocer el pokemon que a más pokemones les puede ganar de una lista.
+
+elMasPicante :: [Pokemon] -> Pokemon
+elMasPicante pokemones = foldl1 (elMejorDeDos pokemones) pokemones
+
+elMejorDeDos :: [Pokemon] -> Pokemon -> Pokemon -> Pokemon
+elMejorDeDos pokemones poke1 poke2 | cantidadVictorias poke1 pokemones >= cantidadVictorias poke2 pokemones = poke1
+                         | otherwise = poke2
+
+-- no acepta listas vacias (y está bien)
+miHead (x:xs) = x
+
+-- no acepta listas vacias (y está bien)
+foldl1 operacion (x:xs) = foldl operacion x xs
+
+-- no acepta listas vacías y está mal, porque sum debería
+sum' = foldl1 (+)
+
+-- Este sum es la q va
+sum'' = foldl (+) 0
